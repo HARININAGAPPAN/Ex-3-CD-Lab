@@ -13,58 +13,80 @@ To write a yacc program to recognize a valid arithmetic expression that uses ope
 8.	Enter an arithmetic expression as input and the tokens are identified as output.
 # PROGRAM
 cd3.l
-```%{
-/* This LEX program returns the tokens for the expression */
+```
+%{
 #include "y.tab.h"
 %}
+
 %%
-"=" {printf("\n Operator is EQUAL");}
-"+" {printf("\n Operator is PLUS");}
-"-" {printf("\n Operator is MINUS");}
-"/" {printf("\n Operator is DIVISION");}
-"*" {printf("\n Operator is MULTIPLICATION");}
-[a-zA-Z]*[0-9]* {
-printf("\n Identifier is %s",yytext);
-return ID; }
-. return yytext[0];
-\n return 0;
-%%
-int yywrap()
-{
-return 1;
+
+"="  { printf("\nOperator is EQUAL"); return '='; }
+"+"  { printf("\nOperator is PLUS"); return '+'; }
+"-"  { printf("\nOperator is MINUS"); return '-'; }
+"/"  { printf("\nOperator is DIVISION"); return '/'; }
+"*"  { printf("\nOperator is MULTIPLICATION"); return '*'; }
+
+[a-zA-Z_][a-zA-Z0-9_]* {
+    printf("\nIdentifier is %s", yytext);
+    return ID;
 }
+
+.  { return yytext[0]; }
+\n { return 0; }
+
+%%
+
+int yywrap() {
+    return 1;
+}
+
 cd3.y
 
 %{
 #include<stdio.h>
-/* This YACC program is for recognizing the Expression */
 %}
+
 %token A ID
+
 %%
+
 statement: A'='E
+
 | E {
+
 printf("\n Valid arithmetic expression");
+
 $$=$1;
+
 }
+
 ;
+
 E: E'+'ID
+
 | E'-'ID
+
 | E'*'ID
+
 | E'/'ID
+
 | ID
+
 ;
+
 %%
-extern FILE*yyin;
-main() {
-do {
-yyparse();
-}while(!feof(yyin)); }
- yyerror(char*s)
+
+extern FILE*yyin; main() {
+do { yyparse();
+}while(!feof(yyin)); } yyerror(char*s)
 {
+
 }
+
 ```
 # OUTPUT
-![Screenshot 2025-04-24 143116](https://github.com/user-attachments/assets/c017589a-ccec-4755-827f-d43231643f5e)
+![Screenshot 2025-05-08 135826](https://github.com/user-attachments/assets/49f706c5-ff2f-4dd0-893a-2e0cf87a954a)
+
 
 # RESULT
 A YACC program to recognize a valid arithmetic expression that uses operator +,-,* and / is executed successfully and the output is verified.
